@@ -42,17 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Create a button to play the startup sound
-    const playStartupSoundButton = document.createElement('button');
-    playStartupSoundButton.textContent = 'Play Startup Sound';
-    playStartupSoundButton.style.position = 'fixed';
-    playStartupSoundButton.style.top = '10px';
-    playStartupSoundButton.style.right = '10px';
-    playStartupSoundButton.style.zIndex = '9999';
-    document.body.appendChild(playStartupSoundButton);
-
-    // Add click event listener to the button
-    playStartupSoundButton.addEventListener('click', playStartupSound);
+    // Play startup sound when the page loads
+    playStartupSound();
 
     // Rest of the code remains the same...
     // (Theme switching, desktop icons, link buttons, clock, window controls)

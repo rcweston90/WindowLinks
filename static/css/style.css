@@ -75,6 +75,10 @@ body {
     margin-right: 5px;
 }
 
+.title-bar-controls {
+    display: flex;
+}
+
 .title-bar-controls button {
     width: 16px;
     height: 14px;

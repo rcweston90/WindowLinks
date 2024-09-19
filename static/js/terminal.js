@@ -14,11 +14,12 @@ function initializeTerminal() {
     }
 
     const commands = {
-        help: 'Available commands: help, list, add, delete, move, clear',
+        help: 'Available commands: help, list, add, delete, swap, clear, exit',
         list: 'Listing links...',
         add: 'Usage: add <name> <url>',
         delete: 'Usage: delete <id>',
-        move: 'Usage: move <id> <new_position>'
+        swap: 'Usage: swap <number1> <number2>',
+        exit: 'Exiting admin terminal...'
     };
 
     function processCommand(command) {
@@ -41,14 +42,18 @@ function initializeTerminal() {
                 console.log('Executing delete command');
                 if (parts.length !== 2) return commands.delete;
                 return deleteLink(parts[1]);
-            case 'move':
-                console.log('Executing move command');
-                if (parts.length !== 3) return commands.move;
-                return moveLink(parts[1], parts[2]);
+            case 'swap':
+                console.log('Executing swap command');
+                if (parts.length !== 3) return commands.swap;
+                return swapLinks(parts[1], parts[2]);
             case 'clear':
                 console.log('Executing clear command');
                 terminalOutput.innerHTML = '';
                 return '';
+            case 'exit':
+                console.log('Executing exit command');
+                window.location.href = '/';
+                return commands.exit;
             default:
                 console.log('Unknown command:', cmd);
                 return `Unknown command: ${cmd}. Type 'help' for available commands.`;
@@ -61,7 +66,7 @@ function initializeTerminal() {
             .then(response => response.json())
             .then(links => {
                 console.log('Links fetched:', links);
-                return links.map(link => `${link.id}: ${link.name} - ${link.url}`).join('\n');
+                return links.map((link, index) => `${index + 1}. ${link.name} - ${link.url}`).join('\n');
             })
             .catch(error => {
                 console.error('Error fetching links:', error);
@@ -79,7 +84,7 @@ function initializeTerminal() {
         .then(response => response.json())
         .then(link => {
             console.log('Link added:', link);
-            return `Added: ${link.id}: ${link.name} - ${link.url}`;
+            return `Added: ${link.name} - ${link.url}`;
         })
         .catch(error => {
             console.error('Error adding link:', error);
@@ -101,22 +106,29 @@ function initializeTerminal() {
             });
     }
 
-    function moveLink(id, newPosition) {
-        console.log('Moving link:', { id, newPosition });
-        return fetch(`/api/links/${id}/move`, {
+    function swapLinks(number1, number2) {
+        console.log('Swapping links:', { number1, number2 });
+        return fetch('/api/links/swap', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({new_position: parseInt(newPosition)})
+            body: JSON.stringify({position1: parseInt(number1), position2: parseInt(number2)})
         })
         .then(response => response.json())
         .then(result => {
-            console.log('Link moved:', result);
-            return `Moved link with id: ${id} to position: ${newPosition}`;
+            console.log('Links swapped:', result);
+            return `Swapped links at positions ${number1} and ${number2}`;
         })
         .catch(error => {
-            console.error('Error moving link:', error);
+            console.error('Error swapping links:', error);
             return `Error: ${error}`;
         });
+    }
+
+    function typeWriter(text, element, index = 0, interval = 50) {
+        if (index < text.length) {
+            element.innerHTML += text.charAt(index);
+            setTimeout(() => typeWriter(text, element, index + 1, interval), interval);
+        }
     }
 
     terminalInput.addEventListener('keyup', function(event) {
@@ -124,7 +136,9 @@ function initializeTerminal() {
         if (event.key === 'Enter') {
             const command = this.value;
             console.log('Command entered:', command);
-            terminalOutput.innerHTML += `$ ${command}\n`;
+            const outputElement = document.createElement('div');
+            outputElement.innerHTML = `<span class="prompt">C:\\ADMIN&gt;</span>${command}\n`;
+            terminalOutput.appendChild(outputElement);
             this.value = '';
 
             try {
@@ -132,7 +146,9 @@ function initializeTerminal() {
                 if (result instanceof Promise) {
                     result.then(output => {
                         console.log('Command output:', output);
-                        terminalOutput.innerHTML += `${output}\n`;
+                        const responseElement = document.createElement('div');
+                        terminalOutput.appendChild(responseElement);
+                        typeWriter(output + '\n', responseElement);
                         terminal.scrollTop = terminal.scrollHeight;
                     }).catch(error => {
                         console.error('Error processing command:', error);
@@ -141,7 +157,9 @@ function initializeTerminal() {
                     });
                 } else {
                     console.log('Command output:', result);
-                    terminalOutput.innerHTML += `${result}\n`;
+                    const responseElement = document.createElement('div');
+                    terminalOutput.appendChild(responseElement);
+                    typeWriter(result + '\n', responseElement);
                     terminal.scrollTop = terminal.scrollHeight;
                 }
             } catch (error) {
@@ -153,7 +171,8 @@ function initializeTerminal() {
     });
 
     // Initial welcome message
-    terminalOutput.innerHTML = 'Welcome to the Admin Terminal. Type "help" for available commands.\n';
+    const welcomeMessage = 'Welcome to the Windows 98 Admin Terminal.\nType "help" for available commands.\n';
+    typeWriter(welcomeMessage, terminalOutput);
     console.log('Initial welcome message set');
 }
 
@@ -165,32 +184,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error initializing terminal:', error);
     }
 });
-
-// Mutation Observer to check for dynamically added elements
-const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.type === 'childList') {
-            const addedNodes = mutation.addedNodes;
-            for (let i = 0; i < addedNodes.length; i++) {
-                if (addedNodes[i].id === 'terminal') {
-                    console.log('Terminal element dynamically added');
-                    observer.disconnect();
-                    initializeTerminal();
-                    return;
-                }
-            }
-        }
-    });
-});
-
-observer.observe(document.body, { childList: true, subtree: true });
-
-// Fallback mechanism using setTimeout
-setTimeout(function() {
-    if (!document.getElementById('terminal')) {
-        console.log('Terminal element not found after timeout, attempting to initialize');
-        initializeTerminal();
-    }
-}, 5000);
 
 console.log('terminal.js loaded');

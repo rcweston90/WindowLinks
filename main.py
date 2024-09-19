@@ -46,43 +46,27 @@ def delete_link(id):
     db.session.commit()
     return jsonify({'message': 'Link deleted successfully'})
 
-@app.route("/api/links/<int:id>/move", methods=['POST'])
-def move_link(id):
-    link = Link.query.get_or_404(id)
-    new_position = request.json.get('new_position')
+@app.route("/api/links/swap", methods=['POST'])
+def swap_links():
+    data = request.json
+    position1 = data.get('position1')
+    position2 = data.get('position2')
     
-    if new_position is None:
-        return jsonify({"message": "New position is required"}), 400
+    if position1 is None or position2 is None:
+        return jsonify({"message": "Both positions are required"}), 400
     
     links = Link.query.order_by(Link.order).all()
-    current_position = links.index(link)
     
-    if new_position < 0 or new_position >= len(links):
-        return jsonify({"message": "Invalid new position"}), 400
+    if position1 < 1 or position2 < 1 or position1 > len(links) or position2 > len(links):
+        return jsonify({"message": "Invalid position(s)"}), 400
     
-    if new_position > current_position:
-        for i in range(current_position, new_position):
-            links[i].order = links[i+1].order
-        link.order = links[new_position].order
-    elif new_position < current_position:
-        for i in range(current_position, new_position, -1):
-            links[i].order = links[i-1].order
-        link.order = links[new_position].order
+    link1 = links[position1 - 1]
+    link2 = links[position2 - 1]
+    
+    link1.order, link2.order = link2.order, link1.order
     
     db.session.commit()
-    return jsonify({"message": f"Link moved to position {new_position}"})
-
-@app.route("/update_order", methods=['POST'])
-def update_order():
-    new_order = request.json.get('order', [])
-    if new_order:
-        for index, link_id in enumerate(new_order):
-            link = Link.query.get(int(link_id))
-            if link:
-                link.order = index
-        db.session.commit()
-        return jsonify({"message": "Order updated successfully"}), 200
-    return jsonify({"message": "No order data received"}), 400
+    return jsonify({"message": f"Swapped links at positions {position1} and {position2}"})
 
 if __name__ == "__main__":
     with app.app_context():

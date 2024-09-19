@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     startupSound.volume = 0.7;
     errorSound.volume = 0.7;
 
+    // Play startup sound when the page is fully loaded
     startupSound.play().then(() => {
         console.log('Startup sound played successfully');
     }).catch((error) => {

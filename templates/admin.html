@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Windows 98 Linktree Clone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .admin-container {
+            background-color: #c0c0c0;
+            border: 2px solid #dfdfdf;
+            border-bottom-color: #808080;
+            border-right-color: #808080;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .admin-form input[type="text"] {
+            padding: 5px;
+            border: 2px solid #808080;
+            border-bottom-color: #dfdfdf;
+            border-right-color: #dfdfdf;
+        }
+        .admin-form input[type="submit"] {
+            cursor: pointer;
+        }
+        .admin-links {
+            margin-top: 20px;
+        }
+        .admin-links ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .admin-links li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .delete-button {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Admin Interface</h1>
+        <form class="admin-form" method="POST">
+            <input type="text" name="name" placeholder="Link Name" required>
+            <input type="text" name="url" placeholder="Link URL" required>
+            <input type="submit" value="Add Link" class="link-button">
+        </form>
+        <div class="admin-links">
+            <h2>Current Links</h2>
+            <ul>
+                {% for link in links %}
+                <li>
+                    {{ link.name }} - {{ link.url }}
+                    <a href="{{ url_for('delete', id=link.id) }}" class="delete-button">Delete</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <a href="{{ url_for('index') }}" class="link-button">Back to Main Page</a>
+    </div>
+</body>
+</html>

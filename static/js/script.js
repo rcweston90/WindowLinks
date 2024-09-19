@@ -30,6 +30,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Audio objects created');
 
+    // Create play button
+    const playButton = document.createElement('button');
+    playButton.textContent = 'Play Startup Sound';
+    playButton.style.position = 'fixed';
+    playButton.style.top = '10px';
+    playButton.style.right = '10px';
+    playButton.style.zIndex = '9999';
+    document.body.appendChild(playButton);
+
     // Function to play startup sound
     function playStartupSound() {
         console.log('Attempting to play startup sound');
@@ -42,8 +51,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Play startup sound when the page loads
+    // Add click event listener to the button
+    playButton.addEventListener('click', playStartupSound);
+
+    // Attempt to play automatically
     playStartupSound();
+
+    // Check if the audio file is loaded correctly
+    startupSound.addEventListener('loadeddata', () => {
+        console.log('Startup sound loaded successfully');
+    });
+
+    startupSound.addEventListener('error', (error) => {
+        console.error('Error loading startup sound:', error);
+    });
 
     // Rest of the code remains the same...
     // (Theme switching, desktop icons, link buttons, clock, window controls)

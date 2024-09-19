@@ -7,7 +7,17 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
+    <div class="desktop">
+        <div class="desktop-icons">
+            <div class="icon">
+                <img src="{{ url_for('static', filename='images/my_computer.png') }}" alt="My Computer">
+                <span>My Computer</span>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static', filename='images/my_documents.png') }}" alt="My Documents">
+                <span>My Documents</span>
+            </div>
+        </div>
         <div class="window">
             <div class="title-bar">
                 <div class="title-bar-text">
@@ -29,6 +39,13 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="taskbar">
+        <button class="start-button">
+            <img src="{{ url_for('static', filename='images/start_button.png') }}" alt="Start">
+            Start
+        </button>
+        <div class="time">12:00 PM</div>
     </div>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

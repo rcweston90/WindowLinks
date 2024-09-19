@@ -17,11 +17,18 @@
     <div class="desktop">
         <div class="desktop-icons">
             <div class="icon" data-action="open-computer">
-                <img src="{{ url_for('static', filename='images/my_computer.png') }}" alt="My Computer">
+                <svg width="32" height="32" viewBox="0 0 32 32">
+                    <rect x="2" y="6" width="28" height="20" fill="#c3c7cb" />
+                    <rect x="4" y="8" width="24" height="16" fill="#000080" />
+                    <rect x="6" y="10" width="20" height="12" fill="#ffffff" />
+                </svg>
                 <span>My Computer</span>
             </div>
             <div class="icon" data-action="open-documents">
-                <img src="{{ url_for('static', filename='images/my_documents.png') }}" alt="My Documents">
+                <svg width="32" height="32" viewBox="0 0 32 32">
+                    <path d="M6 2 L22 2 L26 6 L26 30 L6 30 Z" fill="#c3c7cb" />
+                    <path d="M8 4 L20 4 L24 8 L24 28 L8 28 Z" fill="#ffffff" />
+                </svg>
                 <span>My Documents</span>
             </div>
         </div>
@@ -51,7 +58,13 @@
     </div>
     <div class="taskbar">
         <button class="start-button">
-            <img src="{{ url_for('static', filename='images/start_button.png') }}" alt="Start">
+            <svg width="20" height="20" viewBox="0 0 20 20">
+                <rect x="0" y="0" width="20" height="20" fill="#008080" />
+                <rect x="2" y="2" width="7" height="7" fill="#ffffff" />
+                <rect x="11" y="2" width="7" height="7" fill="#ffffff" />
+                <rect x="2" y="11" width="7" height="7" fill="#ffffff" />
+                <rect x="11" y="11" width="7" height="7" fill="#ffffff" />
+            </svg>
             Start
         </button>
         <div class="taskbar-icons"></div>

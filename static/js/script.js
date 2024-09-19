@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskbarIcons = document.querySelector('.taskbar-icons');
     const themeSelector = document.getElementById('themeSelector');
     const desktopIcons = document.querySelectorAll('.desktop-icons .icon');
+    const startButton = document.querySelector('.start-button');
 
     const clickSound = new Audio('/static/sounds/click.wav');
     const startupSound = new Audio('/static/sounds/startup.wav');
@@ -34,15 +35,97 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Theme switching functionality
+    function applyTheme(theme) {
+        document.body.className = theme;
+        localStorage.setItem('selectedTheme', theme);
+        console.log('Theme changed to:', theme);
+
+        // Update desktop icons
+        desktopIcons.forEach(icon => {
+            const svg = icon.querySelector('svg');
+            const action = icon.getAttribute('data-action');
+            updateSVGColors(svg, theme, action);
+        });
+
+        // Update start button
+        const startButtonSVG = startButton.querySelector('svg');
+        updateSVGColors(startButtonSVG, theme, 'start-button');
+
+        // Update window controls
+        const controlButtons = document.querySelectorAll('.title-bar-controls button');
+        controlButtons.forEach(button => {
+            const action = button.getAttribute('aria-label').toLowerCase();
+            updateButtonStyle(button, theme, action);
+        });
+    }
+
+    function updateSVGColors(svg, theme, type) {
+        const colors = getThemeColors(theme);
+        if (type === 'open-computer') {
+            svg.querySelector('rect:nth-child(1)').setAttribute('fill', colors.iconBorder);
+            svg.querySelector('rect:nth-child(2)').setAttribute('fill', colors.iconBackground);
+            svg.querySelector('rect:nth-child(3)').setAttribute('fill', colors.iconForeground);
+        } else if (type === 'open-documents') {
+            svg.querySelector('path:nth-child(1)').setAttribute('fill', colors.iconBorder);
+            svg.querySelector('path:nth-child(2)').setAttribute('fill', colors.iconForeground);
+        } else if (type === 'start-button') {
+            svg.querySelector('rect:nth-child(1)').setAttribute('fill', colors.startButtonBackground);
+            svg.querySelectorAll('rect:not(:first-child)').forEach(rect => {
+                rect.setAttribute('fill', colors.startButtonForeground);
+            });
+        }
+    }
+
+    function updateButtonStyle(button, theme, action) {
+        const colors = getThemeColors(theme);
+        button.style.backgroundColor = colors.windowControlBackground;
+        button.style.borderColor = colors.windowControlBorder;
+    }
+
+    function getThemeColors(theme) {
+        switch (theme) {
+            case 'win95':
+                return {
+                    iconBorder: '#c0c0c0',
+                    iconBackground: '#000080',
+                    iconForeground: '#ffffff',
+                    startButtonBackground: '#c0c0c0',
+                    startButtonForeground: '#000000',
+                    windowControlBackground: '#c0c0c0',
+                    windowControlBorder: '#000000'
+                };
+            case 'win98':
+                return {
+                    iconBorder: '#c3c7cb',
+                    iconBackground: '#000080',
+                    iconForeground: '#ffffff',
+                    startButtonBackground: '#008080',
+                    startButtonForeground: '#ffffff',
+                    windowControlBackground: '#c0c0c0',
+                    windowControlBorder: '#000000'
+                };
+            case 'winxp':
+                return {
+                    iconBorder: '#9db5ce',
+                    iconBackground: '#3a6ea5',
+                    iconForeground: '#ffffff',
+                    startButtonBackground: '#4aaa04',
+                    startButtonForeground: '#ffffff',
+                    windowControlBackground: 'transparent',
+                    windowControlBorder: '#ffffff'
+                };
+            default:
+                return getThemeColors('win98');
+        }
+    }
+
     themeSelector.addEventListener('change', function() {
-        const selectedTheme = this.value;
-        document.body.className = selectedTheme;
-        localStorage.setItem('selectedTheme', selectedTheme);
-        console.log('Theme changed to:', selectedTheme);
+        applyTheme(this.value);
     });
 
     if (savedTheme) {
         themeSelector.value = savedTheme;
+        applyTheme(savedTheme);
     }
 
     // Desktop icon functionality
@@ -156,6 +239,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         this.remove();
     }
+
+    // Apply the initial theme
+    applyTheme(themeSelector.value);
 });
 
 console.log('script.js loaded');

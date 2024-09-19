@@ -20,6 +20,7 @@ body.win95 {
 
 body.winxp {
     background-color: #235dda;
+    background-image: linear-gradient(to bottom, #235dda 0%, #7cb9e8 100%);
 }
 
 .desktop {
@@ -164,6 +165,10 @@ body.win95 .title-bar {
     background: linear-gradient(90deg, #000080, #0000a0);
 }
 
+body.win95 .start-button {
+    background-color: #c0c0c0;
+}
+
 /* Windows XP specific styles */
 body.winxp .window {
     background-color: #fff;
@@ -176,6 +181,35 @@ body.winxp .title-bar {
     background: linear-gradient(to bottom, #0058e6, #3a93ff);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    padding: 5px 5px 5px 8px;
+}
+
+body.winxp .title-bar-controls button {
+    width: 21px;
+    height: 21px;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    background-color: transparent;
+}
+
+body.winxp .title-bar-controls button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+body.winxp .window-body {
+    padding: 10px;
+}
+
+body.winxp .link-button {
+    background: linear-gradient(to bottom, #f6f6f6, #dcdbdb);
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: none;
+}
+
+body.winxp .link-button:hover {
+    background: linear-gradient(to bottom, #e8f1fc, #c9e2fc);
+    border-color: #0078d7;
 }
 
 body.winxp .start-button {
@@ -183,11 +217,13 @@ body.winxp .start-button {
     border: 1px solid #2aba1a;
     border-radius: 3px;
     color: #fff;
+    padding: 3px 8px;
 }
 
 body.winxp .taskbar {
     background: linear-gradient(to bottom, #2a5eda, #3a93ff);
     border-top: 1px solid #0054E3;
+    height: 30px;
 }
 
 body.winxp .time {

@@ -41,6 +41,10 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            padding: 5px;
+            background-color: #dfdfdf;
+            border: 1px solid #808080;
+            cursor: move;
         }
         .delete-button {
             background-color: #ff0000;
@@ -61,9 +65,9 @@
         </form>
         <div class="admin-links">
             <h2>Current Links</h2>
-            <ul>
+            <ul id="linkList">
                 {% for link in links %}
-                <li>
+                <li data-id="{{ link.id }}" draggable="true">
                     {{ link.name }} - {{ link.url }}
                     <a href="{{ url_for('delete', id=link.id) }}" class="delete-button">Delete</a>
                 </li>
@@ -72,5 +76,6 @@
         </div>
         <a href="{{ url_for('index') }}" class="link-button">Back to Main Page</a>
     </div>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 </body>
 </html>

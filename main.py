@@ -13,6 +13,9 @@ class Link(db.Model):
     url = db.Column(db.String(200), nullable=False)
     order = db.Column(db.Integer, nullable=False)
 
+    def __init__(self, **kwargs):
+        super(Link, self).__init__(**kwargs)
+
 @app.route("/")
 def index():
     links = Link.query.order_by(Link.order).all()
@@ -41,24 +44,26 @@ def delete(id):
 
 @app.route("/update_order", methods=['POST'])
 def update_order():
-    new_order = request.json['order']
-    for index, link_id in enumerate(new_order):
-        link = Link.query.get(link_id)
-        if link:
-            link.order = index
-    db.session.commit()
-    return jsonify({"message": "Order updated successfully"}), 200
+    new_order = request.json.get('order', [])
+    if new_order:
+        for index, link_id in enumerate(new_order):
+            link = Link.query.get(int(link_id))
+            if link:
+                link.order = index
+        db.session.commit()
+        return jsonify({"message": "Order updated successfully"}), 200
+    return jsonify({"message": "No order data received"}), 400
 
 if __name__ == "__main__":
     with app.app_context():
-        db.drop_all()  # Drop all existing tables
-        db.create_all()  # Create new tables
-        # Add some initial links
-        initial_links = [
-            Link(name="Google", url="https://www.google.com", order=0),
-            Link(name="Facebook", url="https://www.facebook.com", order=1),
-            Link(name="Twitter", url="https://www.twitter.com", order=2)
-        ]
-        db.session.add_all(initial_links)
-        db.session.commit()
+        db.create_all()
+        # Add some initial links if the database is empty
+        if not Link.query.first():
+            initial_links = [
+                Link(name="Google", url="https://www.google.com", order=0),
+                Link(name="Facebook", url="https://www.facebook.com", order=1),
+                Link(name="Twitter", url="https://www.twitter.com", order=2)
+            ]
+            db.session.add_all(initial_links)
+            db.session.commit()
     app.run(host="0.0.0.0", port=5000)

@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM content loaded');
     const terminal = document.getElementById('terminal');
     const terminalOutput = document.getElementById('terminalOutput');
     const terminalInput = document.getElementById('terminalInput');
     
+    console.log('Terminal elements:', { terminal, terminalOutput, terminalInput });
+
     const commands = {
         help: 'Available commands: help, list, add, delete, move, clear',
         list: 'Listing links...',
@@ -12,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function processCommand(command) {
+        console.log('Processing command:', command);
         const parts = command.split(' ');
         const cmd = parts[0].toLowerCase();
 
@@ -76,8 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     terminalInput.addEventListener('keyup', function(event) {
+        console.log('Key pressed:', event.key);
         if (event.key === 'Enter') {
             const command = this.value;
+            console.log('Command entered:', command);
             terminalOutput.innerHTML += `$ ${command}\n`;
             this.value = '';
 
@@ -96,4 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial welcome message
     terminalOutput.innerHTML = 'Welcome to the Admin Terminal. Type "help" for available commands.\n';
+    console.log('Initial welcome message set');
 });
+
+console.log('terminal.js loaded');

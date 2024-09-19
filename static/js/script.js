@@ -98,16 +98,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Window controls functionality
     let isMinimized = false;
     let isMaximized = false;
+    let originalStyles = {
+        width: windowElement.style.width,
+        height: windowElement.style.height,
+        top: windowElement.style.top,
+        left: windowElement.style.left,
+        transform: windowElement.style.transform
+    };
 
     minimizeButton.addEventListener('click', () => {
         clickSound.play().catch(console.error);
         windowElement.style.display = 'none';
+        isMinimized = true;
         createTaskbarIcon();
     });
 
     maximizeButton.addEventListener('click', () => {
         clickSound.play().catch(console.error);
         if (!isMaximized) {
+            originalStyles = {
+                width: windowElement.style.width,
+                height: windowElement.style.height,
+                top: windowElement.style.top,
+                left: windowElement.style.left,
+                transform: windowElement.style.transform
+            };
             windowElement.style.width = '100%';
             windowElement.style.height = 'calc(100% - 28px)';
             windowElement.style.top = '0';
@@ -115,11 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
             windowElement.style.transform = 'none';
             isMaximized = true;
         } else {
-            windowElement.style.width = '400px';
-            windowElement.style.height = 'auto';
-            windowElement.style.top = '50%';
-            windowElement.style.left = '50%';
-            windowElement.style.transform = 'translate(-50%, -50%)';
+            Object.assign(windowElement.style, originalStyles);
             isMaximized = false;
         }
     });
@@ -140,6 +151,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function restoreWindow() {
         windowElement.style.display = 'block';
+        if (isMinimized) {
+            isMinimized = false;
+        }
         this.remove();
     }
 });

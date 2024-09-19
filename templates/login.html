@@ -4,60 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Windows-style Linktree Clone</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         body, html {
-            height: 100%;
             margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+        .terminal {
+            padding: 10px;
+            height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #008080;
+            flex-direction: column;
         }
-        .login-window {
-            background-color: #c0c0c0;
-            border: 2px solid #dfdfdf;
-            border-bottom-color: #808080;
-            border-right-color: #808080;
-            box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
-            padding: 20px;
-            width: 300px;
-        }
-        .login-title {
-            background: linear-gradient(90deg, #000080, #1084d0);
-            color: white;
+        .terminal-header {
+            background-color: #000080;
+            color: #fff;
             padding: 5px;
-            margin: -20px -20px 20px -20px;
             font-weight: bold;
-        }
-        .login-form input[type="password"] {
-            width: 100%;
-            padding: 5px;
             margin-bottom: 10px;
         }
-        .login-form input[type="submit"] {
-            background-color: #c0c0c0;
-            border: 2px solid #dfdfdf;
-            border-bottom-color: #808080;
-            border-right-color: #808080;
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .terminal-input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .prompt {
+            margin-right: 5px;
+        }
+        .terminal-input {
+            background-color: transparent;
+            border: none;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            flex-grow: 1;
+            outline: none;
+        }
+        .submit-button {
+            background-color: transparent;
+            border: 1px solid #0f0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
             padding: 5px 10px;
             cursor: pointer;
+            align-self: flex-start;
         }
         .error-message {
-            color: red;
+            color: #f00;
             margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="login-window">
-        <div class="login-title">Login to Admin Terminal</div>
+    <div class="terminal">
+        <div class="terminal-header">Windows 98 - Login</div>
         <form class="login-form" method="POST">
             {% if error %}
-            <div class="error-message">{{ error }}</div>
+            <div class="error-message">[ERROR]: {{ error }}</div>
             {% endif %}
-            <input type="password" name="password" placeholder="Enter password" required>
-            <input type="submit" value="Login">
+            <div class="terminal-input-container">
+                <span class="prompt">Password:</span>
+                <input type="password" name="password" class="terminal-input" required>
+            </div>
+            <input type="submit" value="Login" class="submit-button">
         </form>
     </div>
 </body>

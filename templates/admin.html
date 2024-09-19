@@ -6,52 +6,25 @@
     <title>Admin - Windows-style Linktree Clone</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        .admin-container {
-            background-color: #c0c0c0;
-            border: 2px solid #dfdfdf;
-            border-bottom-color: #808080;
-            border-right-color: #808080;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
+        .terminal {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
         }
-        .admin-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .admin-form input[type="text"] {
-            padding: 5px;
-            border: 2px solid #808080;
-            border-bottom-color: #dfdfdf;
-            border-right-color: #dfdfdf;
-        }
-        .admin-form input[type="submit"] {
-            cursor: pointer;
-        }
-        .admin-links {
-            margin-top: 20px;
-        }
-        .admin-links ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .admin-links li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 5px;
-            background-color: #dfdfdf;
-            border: 1px solid #808080;
-            cursor: move;
-        }
-        .delete-button {
-            background-color: #ff0000;
-            color: white;
+        .terminal-input {
+            background-color: transparent;
             border: none;
-            padding: 5px 10px;
-            cursor: pointer;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            outline: none;
+        }
+        .terminal-output {
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -64,26 +37,17 @@
         </select>
     </div>
     <div class="admin-container">
-        <h1>Admin Interface</h1>
-        <form class="admin-form" method="POST">
-            <input type="text" name="name" placeholder="Link Name" required>
-            <input type="text" name="url" placeholder="Link URL" required>
-            <input type="submit" value="Add Link" class="link-button">
-        </form>
-        <div class="admin-links">
-            <h2>Current Links</h2>
-            <ul id="linkList">
-                {% for link in links %}
-                <li data-id="{{ link.id }}" draggable="true">
-                    {{ link.name }} - {{ link.url }}
-                    <a href="{{ url_for('delete', id=link.id) }}" class="delete-button">Delete</a>
-                </li>
-                {% endfor %}
-            </ul>
+        <h1>Admin Terminal</h1>
+        <div class="terminal" id="terminal">
+            <div class="terminal-output" id="terminalOutput"></div>
+            <div>
+                <span class="prompt">$</span>
+                <input type="text" class="terminal-input" id="terminalInput" autofocus>
+            </div>
         </div>
         <a href="{{ url_for('index') }}" class="link-button">Back to Main Page</a>
     </div>
-    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/terminal.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

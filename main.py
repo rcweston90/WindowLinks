@@ -21,26 +21,30 @@ def index():
     links = Link.query.order_by(Link.order).all()
     return render_template("index.html", links=links)
 
-@app.route("/admin", methods=['GET', 'POST'])
+@app.route("/admin")
 def admin():
-    if request.method == 'POST':
-        name = request.form['name']
-        url = request.form['url']
-        max_order = db.session.query(db.func.max(Link.order)).scalar() or 0
-        new_link = Link(name=name, url=url, order=max_order + 1)
-        db.session.add(new_link)
-        db.session.commit()
-        return redirect(url_for('admin'))
-    
-    links = Link.query.order_by(Link.order).all()
-    return render_template("admin.html", links=links)
+    return render_template("admin.html")
 
-@app.route("/delete/<int:id>")
-def delete(id):
+@app.route("/api/links", methods=['GET'])
+def get_links():
+    links = Link.query.order_by(Link.order).all()
+    return jsonify([{'id': link.id, 'name': link.name, 'url': link.url} for link in links])
+
+@app.route("/api/links", methods=['POST'])
+def add_link():
+    data = request.json
+    max_order = db.session.query(db.func.max(Link.order)).scalar() or 0
+    new_link = Link(name=data['name'], url=data['url'], order=max_order + 1)
+    db.session.add(new_link)
+    db.session.commit()
+    return jsonify({'id': new_link.id, 'name': new_link.name, 'url': new_link.url})
+
+@app.route("/api/links/<int:id>", methods=['DELETE'])
+def delete_link(id):
     link = Link.query.get_or_404(id)
     db.session.delete(link)
     db.session.commit()
-    return redirect(url_for('admin'))
+    return jsonify({'message': 'Link deleted successfully'})
 
 @app.route("/update_order", methods=['POST'])
 def update_order():

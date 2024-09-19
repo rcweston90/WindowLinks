@@ -31,6 +31,19 @@
             padding: 5px;
             font-weight: bold;
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logout-button {
+            background-color: #c0c0c0;
+            border: 2px solid #dfdfdf;
+            border-bottom-color: #808080;
+            border-right-color: #808080;
+            padding: 2px 5px;
+            color: #000;
+            text-decoration: none;
+            font-size: 12px;
         }
         .terminal-output {
             flex-grow: 1;
@@ -59,7 +72,10 @@
 </head>
 <body>
     <div class="terminal" id="terminal">
-        <div class="terminal-header">Windows 98 - Admin Terminal</div>
+        <div class="terminal-header">
+            <span>Windows 98 - Admin Terminal</span>
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
         <div class="terminal-output" id="terminalOutput"></div>
         <div class="terminal-input-container">
             <span class="prompt">C:\ADMIN&gt;</span>

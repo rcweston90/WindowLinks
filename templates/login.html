@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Windows-style Linktree Clone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #008080;
+        }
+        .login-window {
+            background-color: #c0c0c0;
+            border: 2px solid #dfdfdf;
+            border-bottom-color: #808080;
+            border-right-color: #808080;
+            box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
+            padding: 20px;
+            width: 300px;
+        }
+        .login-title {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: white;
+            padding: 5px;
+            margin: -20px -20px 20px -20px;
+            font-weight: bold;
+        }
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .login-form input[type="submit"] {
+            background-color: #c0c0c0;
+            border: 2px solid #dfdfdf;
+            border-bottom-color: #808080;
+            border-right-color: #808080;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-window">
+        <div class="login-title">Login to Admin Terminal</div>
+        <form class="login-form" method="POST">
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
+            <input type="password" name="password" placeholder="Enter password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</body>
+</html>

@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///links.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.urandom(24)  # Add this line for session management
 db = SQLAlchemy(app)
 
 class Link(db.Model):
@@ -21,9 +23,27 @@ def index():
     links = Link.query.order_by(Link.order).all()
     return render_template("index.html", links=links)
 
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password = request.form['password']
+        if check_password_hash(generate_password_hash('admin'), password):  # Replace 'admin' with your desired password
+            session['logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            return render_template("login.html", error="Invalid password")
+    return render_template("login.html")
+
 @app.route("/admin")
 def admin():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template("admin.html")
+
+@app.route("/logout")
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('index'))
 
 @app.route("/api/links", methods=['GET'])
 def get_links():
@@ -32,6 +52,8 @@ def get_links():
 
 @app.route("/api/links", methods=['POST'])
 def add_link():
+    if not session.get('logged_in'):
+        return jsonify({'error': 'Unauthorized'}), 401
     data = request.json
     max_order = db.session.query(db.func.max(Link.order)).scalar() or 0
     new_link = Link(name=data['name'], url=data['url'], order=max_order + 1)
@@ -41,6 +63,8 @@ def add_link():
 
 @app.route("/api/links/<int:id>", methods=['DELETE'])
 def delete_link(id):
+    if not session.get('logged_in'):
+        return jsonify({'error': 'Unauthorized'}), 401
     link = Link.query.get_or_404(id)
     db.session.delete(link)
     db.session.commit()
@@ -48,6 +72,8 @@ def delete_link(id):
 
 @app.route("/api/links/swap", methods=['POST'])
 def swap_links():
+    if not session.get('logged_in'):
+        return jsonify({'error': 'Unauthorized'}), 401
     data = request.json
     position1 = data.get('position1')
     position2 = data.get('position2')

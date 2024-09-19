@@ -21,6 +21,22 @@
             width: 100vw;
             overflow-y: auto;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .terminal-output {
+            flex-grow: 1;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-y: auto;
+        }
+        .terminal-input-container {
+            display: flex;
+            align-items: center;
+        }
+        .prompt {
+            color: #0f0;
+            margin-right: 5px;
         }
         .terminal-input {
             background-color: transparent;
@@ -29,17 +45,14 @@
             font-family: 'Courier New', monospace;
             width: 100%;
             outline: none;
-        }
-        .terminal-output {
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            caret-color: #0f0;
         }
     </style>
 </head>
 <body>
     <div class="terminal" id="terminal">
         <div class="terminal-output" id="terminalOutput"></div>
-        <div>
+        <div class="terminal-input-container">
             <span class="prompt">$</span>
             <input type="text" class="terminal-input" id="terminalInput" autofocus>
         </div>

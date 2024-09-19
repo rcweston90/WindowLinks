@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const minimizeButton = document.querySelector('button[aria-label="Minimize"]');
     const maximizeButton = document.querySelector('button[aria-label="Maximize"]');
     const closeButton = document.querySelector('button[aria-label="Close"]');
+    const taskbarIcons = document.querySelector('.taskbar-icons');
 
     // Sound effects
     const clickSound = new Audio('/static/sounds/click.wav');
@@ -14,12 +15,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorSound = new Audio('/static/sounds/error.wav');
 
     // Play startup sound
-    startupSound.play();
+    startupSound.play().then(() => {
+        console.log('Startup sound played successfully');
+    }).catch((error) => {
+        console.error('Error playing startup sound:', error);
+    });
 
     // Link buttons functionality
     linkButtons.forEach(button => {
         button.addEventListener('click', function() {
-            clickSound.play();
+            clickSound.play().then(() => {
+                console.log('Click sound played successfully');
+            }).catch((error) => {
+                console.error('Error playing click sound:', error);
+            });
             const url = this.getAttribute('data-url');
             window.open(url, '_blank');
         });
@@ -86,41 +95,65 @@ document.addEventListener('DOMContentLoaded', function() {
     let isMinimized = false;
     let isMaximized = false;
 
+    function createTaskbarIcon() {
+        const icon = document.createElement('div');
+        icon.classList.add('taskbar-icon');
+        icon.innerHTML = `
+            <img src="/static/images/window_icon.svg" alt="Window Icon">
+            <span>My Links</span>
+        `;
+        icon.addEventListener('click', restoreWindow);
+        taskbarIcons.appendChild(icon);
+        return icon;
+    }
+
+    function removeTaskbarIcon(icon) {
+        taskbarIcons.removeChild(icon);
+    }
+
+    function restoreWindow() {
+        window.classList.remove('minimized');
+        isMinimized = false;
+        removeTaskbarIcon(this);
+    }
+
     minimizeButton.addEventListener('click', () => {
-        clickSound.play();
+        clickSound.play().then(() => {
+            console.log('Click sound played successfully');
+        }).catch((error) => {
+            console.error('Error playing click sound:', error);
+        });
         if (!isMinimized) {
             window.classList.add('minimized');
             isMinimized = true;
-        } else {
-            window.classList.remove('minimized');
-            isMinimized = false;
+            createTaskbarIcon();
         }
     });
 
     maximizeButton.addEventListener('click', () => {
-        clickSound.play();
+        clickSound.play().then(() => {
+            console.log('Click sound played successfully');
+        }).catch((error) => {
+            console.error('Error playing click sound:', error);
+        });
         if (!isMaximized) {
-            window.style.top = '0';
-            window.style.left = '0';
-            window.style.width = '100%';
-            window.style.height = '100%';
-            window.style.transform = 'none';
+            window.classList.add('maximized');
             isMaximized = true;
         } else {
-            window.style.top = '50%';
-            window.style.left = '50%';
-            window.style.width = '400px';
-            window.style.height = 'auto';
-            window.style.transform = 'translate(-50%, -50%)';
+            window.classList.remove('maximized');
             isMaximized = false;
         }
     });
 
     closeButton.addEventListener('click', () => {
-        errorSound.play();
-        setTimeout(() => {
-            window.style.display = 'none';
-        }, 500);
+        errorSound.play().then(() => {
+            console.log('Error sound played successfully');
+        }).catch((error) => {
+            console.error('Error playing error sound:', error);
+        });
+        window.classList.add('minimized');
+        isMinimized = true;
+        createTaskbarIcon();
     });
 
     // Drag and drop functionality for link reordering
@@ -171,7 +204,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save the new order to the server
     function saveNewOrder() {
-        clickSound.play();
+        clickSound.play().then(() => {
+            console.log('Click sound played successfully');
+        }).catch((error) => {
+            console.error('Error playing click sound:', error);
+        });
         const linkItems = document.querySelectorAll('.link-item');
         const newOrder = Array.from(linkItems).map(item => item.dataset.id);
 
@@ -188,7 +225,11 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error updating order:', error);
-            errorSound.play();
+            errorSound.play().then(() => {
+                console.log('Error sound played successfully');
+            }).catch((error) => {
+                console.error('Error playing error sound:', error);
+            });
         });
     }
 

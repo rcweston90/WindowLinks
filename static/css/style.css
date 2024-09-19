@@ -56,6 +56,16 @@ body {
 .window.minimized {
     transform: translate(-50%, 150%) scale(0.1);
     opacity: 0;
+    pointer-events: none;
+}
+
+.window.maximized {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    height: calc(100% - 28px);
+    max-width: none;
 }
 
 .title-bar {
@@ -218,6 +228,45 @@ body {
 .start-button img {
     width: 20px;
     height: 20px;
+    margin-right: 5px;
+}
+
+.taskbar-icons {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.taskbar-icon {
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    height: 100%;
+    background-color: #c0c0c0;
+    border: 1px solid #808080;
+    border-top-color: #dfdfdf;
+    border-left-color: #dfdfdf;
+    margin-right: 2px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.taskbar-icon:hover {
+    background-color: #dfdfdf;
+}
+
+.taskbar-icon:active {
+    border: 1px solid #dfdfdf;
+    border-top-color: #808080;
+    border-left-color: #808080;
+}
+
+.taskbar-icon img {
+    width: 16px;
+    height: 16px;
     margin-right: 5px;
 }
 

@@ -46,6 +46,32 @@ def delete_link(id):
     db.session.commit()
     return jsonify({'message': 'Link deleted successfully'})
 
+@app.route("/api/links/<int:id>/move", methods=['POST'])
+def move_link(id):
+    link = Link.query.get_or_404(id)
+    new_position = request.json.get('new_position')
+    
+    if new_position is None:
+        return jsonify({"message": "New position is required"}), 400
+    
+    links = Link.query.order_by(Link.order).all()
+    current_position = links.index(link)
+    
+    if new_position < 0 or new_position >= len(links):
+        return jsonify({"message": "Invalid new position"}), 400
+    
+    if new_position > current_position:
+        for i in range(current_position, new_position):
+            links[i].order = links[i+1].order
+        link.order = links[new_position].order
+    elif new_position < current_position:
+        for i in range(current_position, new_position, -1):
+            links[i].order = links[i-1].order
+        link.order = links[new_position].order
+    
+    db.session.commit()
+    return jsonify({"message": f"Link moved to position {new_position}"})
+
 @app.route("/update_order", methods=['POST'])
 def update_order():
     new_order = request.json.get('order', [])

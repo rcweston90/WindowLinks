@@ -4,10 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const terminalInput = document.getElementById('terminalInput');
     
     const commands = {
-        help: 'Available commands: help, list, add, delete, clear',
+        help: 'Available commands: help, list, add, delete, move, clear',
         list: 'Listing links...',
         add: 'Usage: add <name> <url>',
-        delete: 'Usage: delete <id>'
+        delete: 'Usage: delete <id>',
+        move: 'Usage: move <id> <new_position>'
     };
 
     function processCommand(command) {
@@ -25,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'delete':
                 if (parts.length !== 2) return commands.delete;
                 return deleteLink(parts[1]);
+            case 'move':
+                if (parts.length !== 3) return commands.move;
+                return moveLink(parts[1], parts[2]);
             case 'clear':
                 terminalOutput.innerHTML = '';
                 return '';
@@ -58,6 +62,17 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(result => `Deleted link with id: ${id}`)
             .catch(error => `Error: ${error}`);
+    }
+
+    function moveLink(id, newPosition) {
+        return fetch(`/api/links/${id}/move`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({new_position: parseInt(newPosition)})
+        })
+        .then(response => response.json())
+        .then(result => `Moved link with id: ${id} to position: ${newPosition}`)
+        .catch(error => `Error: ${error}`);
     }
 
     terminalInput.addEventListener('keyup', function(event) {

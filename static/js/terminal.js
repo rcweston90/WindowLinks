@@ -14,7 +14,7 @@ function initializeTerminal() {
     }
 
     const commands = {
-        help: 'Available commands: help, list, add, delete, swap, clear, exit',
+        help: 'Available commands: help, list (shows IDs), add, delete, swap, clear, exit',
         list: 'Listing links...',
         add: 'Usage: add <name> <url>',
         delete: 'Usage: delete <id>',
@@ -66,7 +66,7 @@ function initializeTerminal() {
             .then(response => response.json())
             .then(links => {
                 console.log('Links fetched:', links);
-                return links.map((link, index) => `${index + 1}. ${link.name} - ${link.url}`).join('\n');
+                return links.map((link, index) => `${index + 1}. [ID: ${link.id}] ${link.name} - ${link.url}`).join('\n');
             })
             .catch(error => {
                 console.error('Error fetching links:', error);
@@ -84,7 +84,7 @@ function initializeTerminal() {
         .then(response => response.json())
         .then(link => {
             console.log('Link added:', link);
-            return `Added: ${link.name} - ${link.url}`;
+            return `Added: [ID: ${link.id}] ${link.name} - ${link.url}`;
         })
         .catch(error => {
             console.error('Error adding link:', error);

@@ -131,49 +131,104 @@ function initializeTerminal() {
         }
     }
 
+    function handlePasswordSubmission(password) {
+        return fetch('/verify_password', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({password: password})
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                console.log('Password verified successfully');
+                return true;
+            } else {
+                console.log('Invalid password');
+                return false;
+            }
+        })
+        .catch(error => {
+            console.error('Error verifying password:', error);
+            return false;
+        });
+    }
+
+    function promptForPassword() {
+        const outputElement = document.createElement('div');
+        outputElement.innerHTML = 'Please enter the admin password:';
+        terminalOutput.appendChild(outputElement);
+        terminalInput.type = 'password';
+        terminalInput.value = '';
+        terminalInput.focus();
+    }
+
     terminalInput.addEventListener('keyup', function(event) {
         console.log('Key pressed:', event.key);
         if (event.key === 'Enter') {
             const command = this.value;
             console.log('Command entered:', command);
             const outputElement = document.createElement('div');
-            outputElement.innerHTML = `<span class="prompt">C:\\ADMIN&gt;</span>${command}\n`;
-            terminalOutput.appendChild(outputElement);
-            this.value = '';
+            
+            if (requirePassword && terminalInput.type === 'password') {
+                outputElement.innerHTML = '*'.repeat(command.length);
+                terminalOutput.appendChild(outputElement);
+                handlePasswordSubmission(command).then(success => {
+                    if (success) {
+                        requirePassword = false;
+                        terminalInput.type = 'text';
+                        const successElement = document.createElement('div');
+                        successElement.innerHTML = 'Password accepted. Welcome to the admin terminal.';
+                        terminalOutput.appendChild(successElement);
+                    } else {
+                        const errorElement = document.createElement('div');
+                        errorElement.innerHTML = 'Invalid password. Please try again:';
+                        terminalOutput.appendChild(errorElement);
+                    }
+                    this.value = '';
+                });
+            } else {
+                outputElement.innerHTML = `<span class="prompt">C:\\ADMIN&gt;</span>${command}\n`;
+                terminalOutput.appendChild(outputElement);
+                this.value = '';
 
-            try {
-                const result = processCommand(command);
-                if (result instanceof Promise) {
-                    result.then(output => {
-                        console.log('Command output:', output);
+                try {
+                    const result = processCommand(command);
+                    if (result instanceof Promise) {
+                        result.then(output => {
+                            console.log('Command output:', output);
+                            const responseElement = document.createElement('div');
+                            terminalOutput.appendChild(responseElement);
+                            typeWriter(output + '\n', responseElement);
+                            terminal.scrollTop = terminal.scrollHeight;
+                        }).catch(error => {
+                            console.error('Error processing command:', error);
+                            terminalOutput.innerHTML += `Error: ${error.message}\n`;
+                            terminal.scrollTop = terminal.scrollHeight;
+                        });
+                    } else {
+                        console.log('Command output:', result);
                         const responseElement = document.createElement('div');
                         terminalOutput.appendChild(responseElement);
-                        typeWriter(output + '\n', responseElement);
+                        typeWriter(result + '\n', responseElement);
                         terminal.scrollTop = terminal.scrollHeight;
-                    }).catch(error => {
-                        console.error('Error processing command:', error);
-                        terminalOutput.innerHTML += `Error: ${error.message}\n`;
-                        terminal.scrollTop = terminal.scrollHeight;
-                    });
-                } else {
-                    console.log('Command output:', result);
-                    const responseElement = document.createElement('div');
-                    terminalOutput.appendChild(responseElement);
-                    typeWriter(result + '\n', responseElement);
+                    }
+                } catch (error) {
+                    console.error('Error processing command:', error);
+                    terminalOutput.innerHTML += `Error: ${error.message}\n`;
                     terminal.scrollTop = terminal.scrollHeight;
                 }
-            } catch (error) {
-                console.error('Error processing command:', error);
-                terminalOutput.innerHTML += `Error: ${error.message}\n`;
-                terminal.scrollTop = terminal.scrollHeight;
             }
         }
     });
 
     // Initial welcome message
-    const welcomeMessage = 'Welcome to the Windows 98 Admin Terminal.\nType "help" for available commands.\n';
+    const welcomeMessage = requirePassword ? 'Welcome to the Windows 98 Admin Terminal.\nPlease enter the admin password:' : 'Welcome to the Windows 98 Admin Terminal.\nType "help" for available commands.\n';
     typeWriter(welcomeMessage, terminalOutput);
     console.log('Initial welcome message set');
+
+    if (requirePassword) {
+        terminalInput.type = 'password';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {

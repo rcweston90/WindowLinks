@@ -83,5 +83,8 @@
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/terminal.js') }}"></script>
+    <script>
+        const requirePassword = {{ require_password|tojson }};
+    </script>
 </body>
 </html>

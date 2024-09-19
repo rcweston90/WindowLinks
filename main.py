@@ -23,22 +23,20 @@ def index():
     links = Link.query.order_by(Link.order).all()
     return render_template("index.html", links=links)
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        password = request.form['password']
-        if check_password_hash(generate_password_hash('admin'), password):  # Replace 'admin' with your desired password
-            session['logged_in'] = True
-            return redirect(url_for('admin'))
-        else:
-            return render_template("login.html", error="Invalid password")
-    return render_template("login.html")
-
 @app.route("/admin")
 def admin():
     if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template("admin.html")
+        return render_template("admin.html", require_password=True)
+    return render_template("admin.html", require_password=False)
+
+@app.route("/verify_password", methods=['POST'])
+def verify_password():
+    password = request.json.get('password')
+    if check_password_hash(generate_password_hash('admin'), password):  # Replace 'admin' with your desired password
+        session['logged_in'] = True
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'error': 'Invalid password'})
 
 @app.route("/logout")
 def logout():

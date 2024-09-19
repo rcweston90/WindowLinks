@@ -130,6 +130,14 @@ body {
     gap: 8px;
 }
 
+.link-item {
+    cursor: move;
+}
+
+.link-item.dragging {
+    opacity: 0.5;
+}
+
 .link-button {
     font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 14px;
@@ -143,6 +151,7 @@ body {
     text-align: center;
     text-decoration: none;
     cursor: pointer;
+    width: 100%;
 }
 
 .link-button:active {

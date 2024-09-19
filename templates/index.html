@@ -32,9 +32,11 @@
             </div>
             <div class="window-body">
                 <p>Welcome to my Windows 98 style Linktree!</p>
-                <div class="link-container">
+                <div class="link-container" id="linkContainer">
                     {% for link in links %}
-                    <button class="link-button" data-url="{{ link.url }}">{{ link.name }}</button>
+                    <div class="link-item" draggable="true" data-id="{{ link.id }}">
+                        <button class="link-button" data-url="{{ link.url }}">{{ link.name }}</button>
+                    </div>
                     {% endfor %}
                 </div>
             </div>

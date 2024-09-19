@@ -23,6 +23,7 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
+            z-index: 1000;
         }
         .terminal-output {
             flex-grow: 1;
@@ -49,7 +50,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="console.log('Admin page fully loaded');">
     <div class="terminal" id="terminal">
         <div class="terminal-output" id="terminalOutput"></div>
         <div class="terminal-input-container">

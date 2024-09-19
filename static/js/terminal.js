@@ -1,5 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM content loaded');
+console.log('terminal.js loading');
+
+function initializeTerminal() {
+    console.log('Initializing terminal');
     const terminal = document.getElementById('terminal');
     const terminalOutput = document.getElementById('terminalOutput');
     const terminalInput = document.getElementById('terminalInput');
@@ -132,6 +134,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log('Command output:', output);
                         terminalOutput.innerHTML += `${output}\n`;
                         terminal.scrollTop = terminal.scrollHeight;
+                    }).catch(error => {
+                        console.error('Error processing command:', error);
+                        terminalOutput.innerHTML += `Error: ${error.message}\n`;
+                        terminal.scrollTop = terminal.scrollHeight;
                     });
                 } else {
                     console.log('Command output:', result);
@@ -149,6 +155,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial welcome message
     terminalOutput.innerHTML = 'Welcome to the Admin Terminal. Type "help" for available commands.\n';
     console.log('Initial welcome message set');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM content loaded');
+    try {
+        initializeTerminal();
+    } catch (error) {
+        console.error('Error initializing terminal:', error);
+    }
 });
+
+// Mutation Observer to check for dynamically added elements
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+            const addedNodes = mutation.addedNodes;
+            for (let i = 0; i < addedNodes.length; i++) {
+                if (addedNodes[i].id === 'terminal') {
+                    console.log('Terminal element dynamically added');
+                    observer.disconnect();
+                    initializeTerminal();
+                    return;
+                }
+            }
+        }
+    });
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
+// Fallback mechanism using setTimeout
+setTimeout(function() {
+    if (!document.getElementById('terminal')) {
+        console.log('Terminal element not found after timeout, attempting to initialize');
+        initializeTerminal();
+    }
+}, 5000);
 
 console.log('terminal.js loaded');

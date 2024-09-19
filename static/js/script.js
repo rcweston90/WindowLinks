@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const linkButtons = document.querySelectorAll('.link-button');
     const timeDisplay = document.querySelector('.time');
-    const window = document.querySelector('.window');
+    const windowElement = document.querySelector('.window');
     const titleBar = document.querySelector('.title-bar');
     const linkContainer = document.getElementById('linkContainer');
     const minimizeButton = document.querySelector('button[aria-label="Minimize"]');
@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const startupSound = new Audio('/static/sounds/startup.wav');
     const errorSound = new Audio('/static/sounds/error.wav');
 
+    // Increase volume of sound effects
+    clickSound.volume = 0.7;
+    startupSound.volume = 0.7;
+    errorSound.volume = 0.7;
+
     // Play startup sound
     startupSound.play().then(() => {
         console.log('Startup sound played successfully');
@@ -21,11 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error playing startup sound:', error);
     });
 
+    // Fade-in effect when opening the window
+    windowElement.style.opacity = '0';
+    windowElement.style.transition = 'opacity 0.5s ease-in-out';
+    setTimeout(() => {
+        windowElement.style.opacity = '1';
+    }, 100);
+
     // Link buttons functionality
     linkButtons.forEach(button => {
         button.addEventListener('click', function() {
             clickSound.play().then(() => {
                 console.log('Click sound played successfully');
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 100);
             }).catch((error) => {
                 console.error('Error playing click sound:', error);
             });
@@ -34,12 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Update clock
+    // Update clock with pulsing effect
     function updateClock() {
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
         timeDisplay.textContent = `${hours}:${minutes}`;
+        timeDisplay.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            timeDisplay.style.transform = 'scale(1)';
+        }, 500);
     }
 
     setInterval(updateClock, 1000);
@@ -76,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             xOffset = currentX;
             yOffset = currentY;
 
-            setTranslate(currentX, currentY, window);
+            setTranslate(currentX, currentY, windowElement);
         }
     }
 
@@ -112,9 +132,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function restoreWindow() {
-        window.classList.remove('minimized');
+        windowElement.classList.remove('minimized');
         isMinimized = false;
         removeTaskbarIcon(this);
+        animateBounce(windowElement);
+    }
+
+    function animateBounce(element) {
+        element.style.animation = 'bounce 0.5s';
+        element.addEventListener('animationend', () => {
+            element.style.animation = '';
+        }, {once: true});
     }
 
     minimizeButton.addEventListener('click', () => {
@@ -124,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error playing click sound:', error);
         });
         if (!isMinimized) {
-            window.classList.add('minimized');
+            windowElement.classList.add('minimized');
             isMinimized = true;
             createTaskbarIcon();
         }
@@ -137,24 +165,33 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error playing click sound:', error);
         });
         if (!isMaximized) {
-            window.classList.add('maximized');
+            windowElement.classList.add('maximized');
             isMaximized = true;
         } else {
-            window.classList.remove('maximized');
+            windowElement.classList.remove('maximized');
             isMaximized = false;
         }
+        animateBounce(windowElement);
     });
 
     closeButton.addEventListener('click', () => {
         errorSound.play().then(() => {
             console.log('Error sound played successfully');
+            animateShake(windowElement);
         }).catch((error) => {
             console.error('Error playing error sound:', error);
         });
-        window.classList.add('minimized');
+        windowElement.classList.add('minimized');
         isMinimized = true;
         createTaskbarIcon();
     });
+
+    function animateShake(element) {
+        element.style.animation = 'shake 0.5s';
+        element.addEventListener('animationend', () => {
+            element.style.animation = '';
+        }, {once: true});
+    }
 
     // Drag and drop functionality for link reordering
     let draggedItem = null;
@@ -162,13 +199,13 @@ document.addEventListener('DOMContentLoaded', function() {
     linkContainer.addEventListener('dragstart', (e) => {
         draggedItem = e.target.closest('.link-item');
         setTimeout(() => {
-            draggedItem.style.display = 'none';
+            draggedItem.style.opacity = '0.5';
         }, 0);
     });
 
     linkContainer.addEventListener('dragend', () => {
         setTimeout(() => {
-            draggedItem.style.display = '';
+            draggedItem.style.opacity = '1';
             draggedItem = null;
         }, 0);
     });

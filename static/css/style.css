@@ -50,6 +50,12 @@ body {
     box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
     max-width: 400px;
     width: 100%;
+    transition: all 0.3s ease;
+}
+
+.window.minimized {
+    transform: translate(-50%, 150%) scale(0.1);
+    opacity: 0;
 }
 
 .title-bar {
@@ -87,10 +93,16 @@ body {
     margin-left: 2px;
     position: relative;
     box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+    transition: all 0.1s ease;
+}
+
+.title-bar-controls button:hover {
+    filter: brightness(1.1);
 }
 
 .title-bar-controls button:active {
     box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+    transform: translateY(1px);
 }
 
 .title-bar-controls button::before {
@@ -152,6 +164,11 @@ body {
     text-decoration: none;
     cursor: pointer;
     width: 100%;
+    transition: all 0.1s ease;
+}
+
+.link-button:hover {
+    filter: brightness(1.05);
 }
 
 .link-button:active {
@@ -159,6 +176,7 @@ body {
     border: 2px solid #808080;
     border-bottom-color: #dfdfdf;
     border-right-color: #dfdfdf;
+    transform: translateY(1px);
 }
 
 .taskbar {
@@ -182,6 +200,19 @@ body {
     border-bottom-color: #808080;
     border-right-color: #808080;
     box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a;
+    transition: all 0.1s ease;
+}
+
+.start-button:hover {
+    filter: brightness(1.05);
+}
+
+.start-button:active {
+    box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff;
+    border: 2px solid #808080;
+    border-bottom-color: #dfdfdf;
+    border-right-color: #dfdfdf;
+    transform: translateY(1px);
 }
 
 .start-button img {

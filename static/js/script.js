@@ -4,10 +4,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const window = document.querySelector('.window');
     const titleBar = document.querySelector('.title-bar');
     const linkContainer = document.getElementById('linkContainer');
+    const minimizeButton = document.querySelector('button[aria-label="Minimize"]');
+    const maximizeButton = document.querySelector('button[aria-label="Maximize"]');
+    const closeButton = document.querySelector('button[aria-label="Close"]');
+
+    // Sound effects
+    const clickSound = new Audio('/static/sounds/click.wav');
+    const startupSound = new Audio('/static/sounds/startup.wav');
+    const errorSound = new Audio('/static/sounds/error.wav');
+
+    // Play startup sound
+    startupSound.play();
 
     // Link buttons functionality
     linkButtons.forEach(button => {
         button.addEventListener('click', function() {
+            clickSound.play();
             const url = this.getAttribute('data-url');
             window.open(url, '_blank');
         });
@@ -70,6 +82,47 @@ document.addEventListener('DOMContentLoaded', function() {
         el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
     }
 
+    // Minimize, Maximize, and Close functionality
+    let isMinimized = false;
+    let isMaximized = false;
+
+    minimizeButton.addEventListener('click', () => {
+        clickSound.play();
+        if (!isMinimized) {
+            window.classList.add('minimized');
+            isMinimized = true;
+        } else {
+            window.classList.remove('minimized');
+            isMinimized = false;
+        }
+    });
+
+    maximizeButton.addEventListener('click', () => {
+        clickSound.play();
+        if (!isMaximized) {
+            window.style.top = '0';
+            window.style.left = '0';
+            window.style.width = '100%';
+            window.style.height = '100%';
+            window.style.transform = 'none';
+            isMaximized = true;
+        } else {
+            window.style.top = '50%';
+            window.style.left = '50%';
+            window.style.width = '400px';
+            window.style.height = 'auto';
+            window.style.transform = 'translate(-50%, -50%)';
+            isMaximized = false;
+        }
+    });
+
+    closeButton.addEventListener('click', () => {
+        errorSound.play();
+        setTimeout(() => {
+            window.style.display = 'none';
+        }, 500);
+    });
+
     // Drag and drop functionality for link reordering
     let draggedItem = null;
 
@@ -118,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save the new order to the server
     function saveNewOrder() {
+        clickSound.play();
         const linkItems = document.querySelectorAll('.link-item');
         const newOrder = Array.from(linkItems).map(item => item.dataset.id);
 
@@ -134,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch((error) => {
             console.error('Error updating order:', error);
+            errorSound.play();
         });
     }
 

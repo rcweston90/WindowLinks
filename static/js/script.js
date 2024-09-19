@@ -1,4 +1,12 @@
+// Apply theme immediately
+const savedTheme = localStorage.getItem('selectedTheme');
+if (savedTheme) {
+    document.body.className = savedTheme;
+    console.log('Theme applied:', savedTheme);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
     const linkButtons = document.querySelectorAll('.link-button');
     const timeDisplay = document.querySelector('.time');
     const windowElement = document.querySelector('.window');
@@ -10,45 +18,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskbarIcons = document.querySelector('.taskbar-icons');
     const themeSelector = document.getElementById('themeSelector');
 
-    // Sound effects
     const clickSound = new Audio('/static/sounds/click.wav');
     const startupSound = new Audio('/static/sounds/startup.wav');
     const errorSound = new Audio('/static/sounds/error.wav');
 
-    // Increase volume of sound effects
     clickSound.volume = 0.7;
     startupSound.volume = 0.7;
     errorSound.volume = 0.7;
 
-    // Play startup sound
     startupSound.play().then(() => {
         console.log('Startup sound played successfully');
     }).catch((error) => {
         console.error('Error playing startup sound:', error);
     });
 
-    // Theme switching functionality
     themeSelector.addEventListener('change', function() {
         const selectedTheme = this.value;
         document.body.className = selectedTheme;
         localStorage.setItem('selectedTheme', selectedTheme);
+        console.log('Theme changed to:', selectedTheme);
     });
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('selectedTheme');
     if (savedTheme) {
-        document.body.className = savedTheme;
         themeSelector.value = savedTheme;
     }
 
-    // Fade-in effect when opening the window
     windowElement.style.opacity = '0';
     windowElement.style.transition = 'opacity 0.5s ease-in-out';
     setTimeout(() => {
         windowElement.style.opacity = '1';
     }, 100);
 
-    // Link buttons functionality
     linkButtons.forEach(button => {
         button.addEventListener('click', function() {
             clickSound.play().then(() => {
@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Update clock with pulsing effect
     function updateClock() {
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
@@ -78,9 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     setInterval(updateClock, 1000);
-    updateClock(); // Initial call to display time immediately
+    updateClock();
 
-    // Make window draggable
     let isDragging = false;
     let currentX;
     let currentY;
@@ -126,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
         el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
     }
 
-    // Minimize, Maximize, and Close functionality
     let isMinimized = false;
     let isMaximized = false;
 
@@ -208,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, {once: true});
     }
 
-    // Drag and drop functionality for link reordering
     let draggedItem = null;
 
     linkContainer.addEventListener('dragstart', (e) => {
@@ -254,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
-    // Save the new order to the server
     function saveNewOrder() {
         clickSound.play().then(() => {
             console.log('Click sound played successfully');
@@ -287,3 +282,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     linkContainer.addEventListener('dragend', saveNewOrder);
 });
+
+console.log('script.js loaded');

@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.querySelector('.start-button');
 
     const clickSound = new Audio('/static/sounds/click.wav');
-    const startupSound = new Audio('/static/sounds/startup.wav');
+    const startupSound = new Audio('/static/sounds/startup.mp3');
     const errorSound = new Audio('/static/sounds/error.wav');
 
     clickSound.volume = 0.7;
@@ -41,20 +41,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to play startup sound
     function playStartupSound() {
-        console.log('Attempting to play startup sound');
+        console.log('About to play startup sound');
         startupSound.play()
             .then(() => {
                 console.log('Startup sound played successfully');
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Error playing startup sound:', error);
+                console.error('Audio state:', startupSound.readyState);
+                console.error('Audio network state:', startupSound.networkState);
             });
     }
 
     // Add click event listener to the button
     playButton.addEventListener('click', playStartupSound);
 
-    // Attempt to play automatically
+    // Attempt to play automatically on page load
     playStartupSound();
 
     // Check if the audio file is loaded correctly
@@ -64,6 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     startupSound.addEventListener('error', (error) => {
         console.error('Error loading startup sound:', error);
+        console.error('Audio state:', startupSound.readyState);
+        console.error('Audio network state:', startupSound.networkState);
     });
 
     // Rest of the code remains the same...

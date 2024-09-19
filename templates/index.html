@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows 98 Linktree Clone</title>
+    <title>Windows-style Linktree Clone</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="win98">
+    <div class="theme-selector">
+        <select id="themeSelector">
+            <option value="win98">Windows 98</option>
+            <option value="win95">Windows 95</option>
+            <option value="winxp">Windows XP</option>
+        </select>
+    </div>
     <div class="desktop">
         <div class="desktop-icons">
             <div class="icon">
@@ -31,7 +38,7 @@
                 </div>
             </div>
             <div class="window-body">
-                <p>Welcome to my Windows 98 style Linktree!</p>
+                <p>Welcome to my Windows-style Linktree!</p>
                 <div class="link-container" id="linkContainer">
                     {% for link in links %}
                     <div class="link-item" draggable="true" data-id="{{ link.id }}">

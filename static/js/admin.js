@@ -1,6 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     const linkList = document.getElementById('linkList');
+    const themeSelector = document.getElementById('themeSelector');
     let draggedItem = null;
+
+    // Theme switching functionality
+    themeSelector.addEventListener('change', function() {
+        const selectedTheme = this.value;
+        document.body.className = selectedTheme;
+        localStorage.setItem('selectedTheme', selectedTheme);
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme) {
+        document.body.className = savedTheme;
+        themeSelector.value = savedTheme;
+    }
 
     linkList.addEventListener('dragstart', (e) => {
         draggedItem = e.target;

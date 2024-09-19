@@ -1,13 +1,25 @@
 /* Windows 98 inspired styles */
 body {
     font-family: 'MS Sans Serif', Arial, sans-serif;
-    background-color: #008080;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
+}
+
+/* Theme-specific styles */
+body.win98 {
+    background-color: #008080;
+}
+
+body.win95 {
+    background-color: #008080;
+}
+
+body.winxp {
+    background-color: #235dda;
 }
 
 .desktop {
@@ -43,14 +55,33 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    max-width: 400px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+/* Theme-specific window styles */
+.win98 .window {
     background-color: #c0c0c0;
     border: 2px solid #dfdfdf;
     border-bottom-color: #808080;
     border-right-color: #808080;
     box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
-    max-width: 400px;
-    width: 100%;
-    transition: all 0.3s ease;
+}
+
+.win95 .window {
+    background-color: #c0c0c0;
+    border: 2px solid #dfdfdf;
+    border-bottom-color: #808080;
+    border-right-color: #808080;
+    box-shadow: inset 1px 1px #dfdfdf, 1px 0 #000, 0 1px #000, 1px 1px #000;
+}
+
+.winxp .window {
+    background-color: #fff;
+    border: 1px solid #0054E3;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .window.minimized {
@@ -69,11 +100,21 @@ body {
 }
 
 .title-bar {
-    background: linear-gradient(90deg, #000080, #1084d0);
     padding: 3px 2px 3px 3px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* Theme-specific title bar styles */
+.win98 .title-bar, .win95 .title-bar {
+    background: linear-gradient(90deg, #000080, #1084d0);
+}
+
+.winxp .title-bar {
+    background: linear-gradient(to bottom, #0058e6, #3a93ff);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 .title-bar-text {
@@ -95,7 +136,8 @@ body {
     display: flex;
 }
 
-.title-bar-controls button {
+/* Theme-specific title bar control styles */
+.win98 .title-bar-controls button, .win95 .title-bar-controls button {
     width: 16px;
     height: 14px;
     border: none;
@@ -103,7 +145,15 @@ body {
     margin-left: 2px;
     position: relative;
     box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
-    transition: all 0.1s ease;
+}
+
+.winxp .title-bar-controls button {
+    width: 21px;
+    height: 21px;
+    border: none;
+    background-color: transparent;
+    margin-left: 2px;
+    position: relative;
 }
 
 .title-bar-controls button:hover {
@@ -111,8 +161,11 @@ body {
 }
 
 .title-bar-controls button:active {
-    box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
     transform: translateY(1px);
+}
+
+.win98 .title-bar-controls button:active, .win95 .title-bar-controls button:active {
+    box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
 }
 
 .title-bar-controls button::before {
@@ -124,22 +177,50 @@ body {
     height: 8px;
 }
 
-.title-bar-controls button[aria-label="Minimize"]::before {
+.win98 .title-bar-controls button[aria-label="Minimize"]::before,
+.win95 .title-bar-controls button[aria-label="Minimize"]::before {
     border-bottom: 2px solid #000;
 }
 
-.title-bar-controls button[aria-label="Maximize"]::before {
+.win98 .title-bar-controls button[aria-label="Maximize"]::before,
+.win95 .title-bar-controls button[aria-label="Maximize"]::before {
     border: 1px solid #000;
     border-top: 2px solid #000;
 }
 
-.title-bar-controls button[aria-label="Close"]::before,
-.title-bar-controls button[aria-label="Close"]::after {
+.win98 .title-bar-controls button[aria-label="Close"]::before,
+.win98 .title-bar-controls button[aria-label="Close"]::after,
+.win95 .title-bar-controls button[aria-label="Close"]::before,
+.win95 .title-bar-controls button[aria-label="Close"]::after {
     content: '\00D7';
     font-size: 12px;
     color: #000;
     left: 3px;
     top: -1px;
+}
+
+.winxp .title-bar-controls button[aria-label="Minimize"]::before {
+    content: '_';
+    color: #fff;
+    font-size: 14px;
+    top: -5px;
+    left: 5px;
+}
+
+.winxp .title-bar-controls button[aria-label="Maximize"]::before {
+    content: '□';
+    color: #fff;
+    font-size: 14px;
+    top: -2px;
+    left: 3px;
+}
+
+.winxp .title-bar-controls button[aria-label="Close"]::before {
+    content: '×';
+    color: #fff;
+    font-size: 16px;
+    top: -2px;
+    left: 4px;
 }
 
 .window-body {
@@ -160,7 +241,8 @@ body {
     opacity: 0.5;
 }
 
-.link-button {
+/* Theme-specific link button styles */
+.win98 .link-button, .win95 .link-button {
     font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 14px;
     padding: 6px 12px;
@@ -170,6 +252,19 @@ body {
     border-right-color: #808080;
     box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a;
     color: #000;
+}
+
+.winxp .link-button {
+    font-family: 'Tahoma', Arial, sans-serif;
+    font-size: 11px;
+    padding: 5px 12px;
+    background: linear-gradient(to bottom, #f6f6f6, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    color: #000;
+}
+
+.link-button {
     text-align: center;
     text-decoration: none;
     cursor: pointer;
@@ -181,7 +276,7 @@ body {
     filter: brightness(1.05);
 }
 
-.link-button:active {
+.win98 .link-button:active, .win95 .link-button:active {
     box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff;
     border: 2px solid #808080;
     border-bottom-color: #dfdfdf;
@@ -189,14 +284,28 @@ body {
     transform: translateY(1px);
 }
 
+.winxp .link-button:active {
+    background: linear-gradient(to bottom, #e3e3e3, #f6f6f6);
+    transform: translateY(1px);
+}
+
 .taskbar {
     height: 28px;
-    background-color: #c0c0c0;
-    border-top: 2px solid #dfdfdf;
     display: flex;
     align-items: center;
     padding: 0 2px;
+}
+
+/* Theme-specific taskbar styles */
+.win98 .taskbar, .win95 .taskbar {
+    background-color: #c0c0c0;
+    border-top: 2px solid #dfdfdf;
     box-shadow: inset 0 1px #fff;
+}
+
+.winxp .taskbar {
+    background: linear-gradient(to bottom, #2a5eda, #3a93ff);
+    border-top: 1px solid #0054E3;
 }
 
 .start-button {
@@ -205,23 +314,38 @@ body {
     font-weight: bold;
     padding: 2px 5px;
     margin-right: 10px;
+}
+
+/* Theme-specific start button styles */
+.win98 .start-button, .win95 .start-button {
     background-color: #c0c0c0;
     border: 2px solid #dfdfdf;
     border-bottom-color: #808080;
     border-right-color: #808080;
     box-shadow: inset 1px 1px #fff, inset -1px -1px #0a0a0a;
-    transition: all 0.1s ease;
+}
+
+.winxp .start-button {
+    background: linear-gradient(to bottom, #3bda2a, #2aba1a);
+    border: 1px solid #2aba1a;
+    border-radius: 3px;
+    color: #fff;
 }
 
 .start-button:hover {
     filter: brightness(1.05);
 }
 
-.start-button:active {
+.win98 .start-button:active, .win95 .start-button:active {
     box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff;
     border: 2px solid #808080;
     border-bottom-color: #dfdfdf;
     border-right-color: #dfdfdf;
+    transform: translateY(1px);
+}
+
+.winxp .start-button:active {
+    background: linear-gradient(to bottom, #2aba1a, #3bda2a);
     transform: translateY(1px);
 }
 
@@ -244,24 +368,42 @@ body {
     align-items: center;
     padding: 0 5px;
     height: 100%;
-    background-color: #c0c0c0;
-    border: 1px solid #808080;
-    border-top-color: #dfdfdf;
-    border-left-color: #dfdfdf;
     margin-right: 2px;
     font-size: 11px;
     cursor: pointer;
     transition: all 0.1s ease;
 }
 
-.taskbar-icon:hover {
+/* Theme-specific taskbar icon styles */
+.win98 .taskbar-icon, .win95 .taskbar-icon {
+    background-color: #c0c0c0;
+    border: 1px solid #808080;
+    border-top-color: #dfdfdf;
+    border-left-color: #dfdfdf;
+}
+
+.winxp .taskbar-icon {
+    background: linear-gradient(to bottom, #f6f6f6, #e3e3e3);
+    border: 1px solid #0054E3;
+    border-radius: 3px;
+}
+
+.win98 .taskbar-icon:hover, .win95 .taskbar-icon:hover {
     background-color: #dfdfdf;
 }
 
-.taskbar-icon:active {
+.winxp .taskbar-icon:hover {
+    background: linear-gradient(to bottom, #e3e3e3, #f6f6f6);
+}
+
+.win98 .taskbar-icon:active, .win95 .taskbar-icon:active {
     border: 1px solid #dfdfdf;
     border-top-color: #808080;
     border-left-color: #808080;
+}
+
+.winxp .taskbar-icon:active {
+    background: linear-gradient(to bottom, #e3e3e3, #f6f6f6);
 }
 
 .taskbar-icon img {
@@ -274,11 +416,21 @@ body {
     margin-left: auto;
     font-size: 12px;
     padding: 2px 5px;
+    transition: transform 0.5s ease;
+}
+
+/* Theme-specific time styles */
+.win98 .time, .win95 .time {
     background-color: #c0c0c0;
     border: 2px solid #808080;
     border-bottom-color: #dfdfdf;
     border-right-color: #dfdfdf;
-    transition: transform 0.5s ease;
+}
+
+.winxp .time {
+    background-color: transparent;
+    color: #fff;
+    border: none;
 }
 
 /* Animation keyframes */
@@ -302,4 +454,18 @@ body {
     .window {
         width: 90%;
     }
+}
+
+/* Theme selector styles */
+.theme-selector {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.theme-selector select {
+    padding: 5px;
+    font-family: 'MS Sans Serif', Arial, sans-serif;
+    font-size: 12px;
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Windows 98 Linktree Clone</title>
+    <title>Admin - Windows-style Linktree Clone</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .admin-container {
@@ -55,7 +55,14 @@
         }
     </style>
 </head>
-<body>
+<body class="win98">
+    <div class="theme-selector">
+        <select id="themeSelector">
+            <option value="win98">Windows 98</option>
+            <option value="win95">Windows 95</option>
+            <option value="winxp">Windows XP</option>
+        </select>
+    </div>
     <div class="admin-container">
         <h1>Admin Interface</h1>
         <form class="admin-form" method="POST">
@@ -77,5 +84,6 @@
         <a href="{{ url_for('index') }}" class="link-button">Back to Main Page</a>
     </div>
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const maximizeButton = document.querySelector('button[aria-label="Maximize"]');
     const closeButton = document.querySelector('button[aria-label="Close"]');
     const taskbarIcons = document.querySelector('.taskbar-icons');
+    const themeSelector = document.getElementById('themeSelector');
 
     // Sound effects
     const clickSound = new Audio('/static/sounds/click.wav');
@@ -25,6 +26,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }).catch((error) => {
         console.error('Error playing startup sound:', error);
     });
+
+    // Theme switching functionality
+    themeSelector.addEventListener('change', function() {
+        const selectedTheme = this.value;
+        document.body.className = selectedTheme;
+        localStorage.setItem('selectedTheme', selectedTheme);
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme) {
+        document.body.className = savedTheme;
+        themeSelector.value = savedTheme;
+    }
 
     // Fade-in effect when opening the window
     windowElement.style.opacity = '0';

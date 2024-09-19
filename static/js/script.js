@@ -33,6 +33,18 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error playing startup sound:', error);
     });
 
+    // Theme switching functionality
+    themeSelector.addEventListener('change', function() {
+        const selectedTheme = this.value;
+        document.body.className = selectedTheme;
+        localStorage.setItem('selectedTheme', selectedTheme);
+        console.log('Theme changed to:', selectedTheme);
+    });
+
+    if (savedTheme) {
+        themeSelector.value = savedTheme;
+    }
+
     // Desktop icon functionality
     desktopIcons.forEach(icon => {
         icon.addEventListener('click', function() {
@@ -55,9 +67,81 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Rest of the existing code...
-    // (Keep all the existing code below this point)
+    // Link buttons functionality
+    linkButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            clickSound.play().then(() => {
+                console.log('Click sound played successfully');
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 100);
+            }).catch((error) => {
+                console.error('Error playing click sound:', error);
+            });
+            const url = this.getAttribute('data-url');
+            window.open(url, '_blank');
+        });
+    });
 
+    // Update clock
+    function updateClock() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        timeDisplay.textContent = `${hours}:${minutes}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Window controls functionality
+    let isMinimized = false;
+    let isMaximized = false;
+
+    minimizeButton.addEventListener('click', () => {
+        clickSound.play().catch(console.error);
+        windowElement.style.display = 'none';
+        createTaskbarIcon();
+    });
+
+    maximizeButton.addEventListener('click', () => {
+        clickSound.play().catch(console.error);
+        if (!isMaximized) {
+            windowElement.style.width = '100%';
+            windowElement.style.height = 'calc(100% - 28px)';
+            windowElement.style.top = '0';
+            windowElement.style.left = '0';
+            windowElement.style.transform = 'none';
+            isMaximized = true;
+        } else {
+            windowElement.style.width = '400px';
+            windowElement.style.height = 'auto';
+            windowElement.style.top = '50%';
+            windowElement.style.left = '50%';
+            windowElement.style.transform = 'translate(-50%, -50%)';
+            isMaximized = false;
+        }
+    });
+
+    closeButton.addEventListener('click', () => {
+        errorSound.play().catch(console.error);
+        windowElement.style.display = 'none';
+        createTaskbarIcon();
+    });
+
+    function createTaskbarIcon() {
+        const icon = document.createElement('div');
+        icon.classList.add('taskbar-icon');
+        icon.innerHTML = '<img src="/static/images/window_icon.svg" alt="Window Icon"> My Links';
+        icon.addEventListener('click', restoreWindow);
+        taskbarIcons.appendChild(icon);
+    }
+
+    function restoreWindow() {
+        windowElement.style.display = 'block';
+        this.remove();
+    }
 });
 
 console.log('script.js loaded');
